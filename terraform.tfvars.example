@@ -1,0 +1,30 @@
+# General Configuration
+location     = "East US"
+environment  = "dev"
+organization = "contoso"
+
+# Network Configuration
+vnet_address_space             = ["10.0.0.0/16"]
+apim_subnet_address_prefix     = "10.0.1.0/24"
+appgw_subnet_address_prefix    = "10.0.2.0/24"
+backend_subnet_address_prefix  = "10.0.3.0/24"
+
+# API Management Configuration
+apim_sku_name        = "Developer_1"  # Options: Developer_1, Standard_1, Premium_1
+apim_publisher_name  = "Contoso API Team"
+apim_publisher_email = "api-team@contoso.com"
+
+# Application Gateway Configuration
+appgw_sku = {
+  name     = "WAF_v2"
+  tier     = "WAF_v2"
+  capacity = 2
+}
+
+# Resource Tags
+tags = {
+  Environment = "Development"
+  Owner       = "Platform Team"
+  Project     = "API Management Landing Zone"
+  CostCenter  = "IT-001"
+}

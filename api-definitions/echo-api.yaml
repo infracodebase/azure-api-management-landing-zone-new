@@ -1,0 +1,64 @@
+openapi: 3.0.0
+info:
+  title: Echo API
+  description: A simple echo service for testing API Management
+  version: '1.0'
+  contact:
+    name: API Support
+    email: api-support@contoso.com
+servers:
+  - url: http://echoapi.cloudapp.net/api
+    description: Echo API Server
+paths:
+  /resource:
+    get:
+      summary: Retrieve echo response
+      description: Returns an echo response with request details
+      operationId: getEcho
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  method:
+                    type: string
+                    description: HTTP method used
+                  url:
+                    type: string
+                    description: Request URL
+                  headers:
+                    type: object
+                    description: Request headers
+                  clientIp:
+                    type: string
+                    description: Client IP address
+    post:
+      summary: Echo POST request
+      description: Returns an echo response for POST requests
+      operationId: postEcho
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  method:
+                    type: string
+                  url:
+                    type: string
+                  headers:
+                    type: object
+                  body:
+                    type: object
+                  clientIp:
+                    type: string

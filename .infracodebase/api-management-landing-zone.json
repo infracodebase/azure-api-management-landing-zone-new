@@ -1,0 +1,260 @@
+{
+  "nodes": [
+    {
+      "id": "vnet",
+      "label": "Virtual Network",
+      "subtitle": "vnet-apim-lz-contoso-dev",
+      "icon": "/icons/azure/networking/virtual-network.png",
+      "type": "container",
+      "borderStyle": "solid"
+    },
+    {
+      "id": "appgw-subnet",
+      "label": "App Gateway Subnet",
+      "subtitle": "snet-appgw",
+      "icon": "/icons/azure/networking/virtual-network.png",
+      "type": "container",
+      "parentNode": "vnet",
+      "layout": "column"
+    },
+    {
+      "id": "apim-subnet",
+      "label": "API Management Subnet",
+      "subtitle": "snet-apim",
+      "icon": "/icons/azure/networking/virtual-network.png",
+      "type": "container",
+      "parentNode": "vnet",
+      "layout": "column"
+    },
+    {
+      "id": "backend-subnet",
+      "label": "Backend Services Subnet",
+      "subtitle": "snet-backend",
+      "icon": "/icons/azure/networking/virtual-network.png",
+      "type": "container",
+      "parentNode": "vnet",
+      "layout": "column"
+    },
+    {
+      "id": "internet",
+      "label": "Internet",
+      "icon": "/icons/azure/networking/virtual-network.png",
+      "position": {
+        "relativeTo": "vnet",
+        "side": "above"
+      }
+    },
+    {
+      "id": "appgw",
+      "label": "Application Gateway",
+      "subtitle": "appgw-contoso-dev",
+      "icon": "/icons/azure/networking/application-gateway.png",
+      "parentNode": "appgw-subnet",
+      "decorators": [
+        {
+          "icon": "/icons/azure/networking/application-gateway-waf.png",
+          "position": "bottom-right",
+          "tooltip": "WAF Protection Enabled"
+        }
+      ]
+    },
+    {
+      "id": "apim",
+      "label": "API Management",
+      "subtitle": "apim-contoso-dev",
+      "icon": "/icons/azure/application/api-management.png",
+      "parentNode": "apim-subnet"
+    },
+    {
+      "id": "app-service",
+      "label": "App Service",
+      "subtitle": "app-backend-api",
+      "icon": "/icons/azure/application/app-service.png",
+      "parentNode": "backend-subnet"
+    },
+    {
+      "id": "aks",
+      "label": "Kubernetes Service",
+      "subtitle": "aks-backend",
+      "icon": "/icons/azure/compute/kubernetes-service-and-ingres.png",
+      "parentNode": "backend-subnet"
+    },
+    {
+      "id": "key-vault",
+      "label": "Key Vault",
+      "subtitle": "kv-apim-contoso",
+      "icon": "/icons/azure/security/key-vault.png",
+      "parentNode": "backend-subnet",
+      "decorators": [
+        {
+          "icon": "/icons/azure/networking/private-endpoint.png",
+          "position": "bottom-left",
+          "tooltip": "Private Endpoint"
+        }
+      ]
+    },
+    {
+      "id": "log-analytics",
+      "label": "Log Analytics",
+      "subtitle": "log-apim-lz",
+      "icon": "/icons/azure/management/log-analytics-workspace.png",
+      "position": {
+        "relativeTo": "vnet",
+        "side": "right"
+      }
+    },
+    {
+      "id": "app-insights",
+      "label": "Application Insights",
+      "subtitle": "appi-apim-lz",
+      "icon": "/icons/azure/management/application-insights.png",
+      "position": {
+        "relativeTo": "log-analytics",
+        "side": "below"
+      }
+    },
+    {
+      "id": "appgw-nsg",
+      "label": "Network Security Group",
+      "subtitle": "nsg-appgw",
+      "icon": "/icons/azure/networking/network-security-group.png",
+      "position": {
+        "relativeTo": "appgw-subnet",
+        "side": "left"
+      }
+    },
+    {
+      "id": "apim-nsg",
+      "label": "Network Security Group",
+      "subtitle": "nsg-apim",
+      "icon": "/icons/azure/networking/network-security-group.png",
+      "position": {
+        "relativeTo": "apim-subnet",
+        "side": "left"
+      }
+    },
+    {
+      "id": "backend-nsg",
+      "label": "Network Security Group",
+      "subtitle": "nsg-backend",
+      "icon": "/icons/azure/networking/network-security-group.png",
+      "position": {
+        "relativeTo": "backend-subnet",
+        "side": "left"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "internet-to-appgw",
+      "source": "internet",
+      "target": "appgw",
+      "label": "HTTPS traffic",
+      "color": "green"
+    },
+    {
+      "id": "appgw-to-apim",
+      "source": "appgw",
+      "target": "apim",
+      "label": "proxies to",
+      "color": "blue"
+    },
+    {
+      "id": "apim-to-app-service",
+      "source": "apim",
+      "target": "app-service",
+      "label": "backend API",
+      "color": "blue"
+    },
+    {
+      "id": "apim-to-aks",
+      "source": "apim",
+      "target": "aks",
+      "label": "microservices",
+      "color": "blue"
+    },
+    {
+      "id": "apim-to-key-vault",
+      "source": "apim",
+      "target": "key-vault",
+      "label": "retrieves secrets",
+      "color": "purple",
+      "style": "dashed"
+    },
+    {
+      "id": "appgw-to-key-vault",
+      "source": "appgw",
+      "target": "key-vault",
+      "label": "SSL certificates",
+      "color": "purple",
+      "style": "dashed"
+    },
+    {
+      "id": "apim-to-logs",
+      "source": "apim",
+      "target": "log-analytics",
+      "label": "logs & metrics",
+      "color": "yellow",
+      "style": "dotted"
+    },
+    {
+      "id": "appgw-to-logs",
+      "source": "appgw",
+      "target": "log-analytics",
+      "label": "logs & metrics",
+      "color": "yellow",
+      "style": "dotted"
+    },
+    {
+      "id": "apim-to-insights",
+      "source": "apim",
+      "target": "app-insights",
+      "label": "telemetry",
+      "color": "yellow",
+      "style": "dotted"
+    },
+    {
+      "id": "nsg-appgw",
+      "source": "appgw-nsg",
+      "target": "appgw-subnet",
+      "label": "protects"
+    },
+    {
+      "id": "nsg-apim",
+      "source": "apim-nsg",
+      "target": "apim-subnet",
+      "label": "protects"
+    },
+    {
+      "id": "nsg-backend",
+      "source": "backend-nsg",
+      "target": "backend-subnet",
+      "label": "protects"
+    }
+  ],
+  "name": "Azure API Management Landing Zone Accelerator",
+  "legend": {
+    "edges": [
+      {
+        "label": "External traffic (HTTPS)",
+        "color": "green",
+        "style": "solid"
+      },
+      {
+        "label": "Internal API traffic",
+        "color": "blue",
+        "style": "solid"
+      },
+      {
+        "label": "Security & secrets",
+        "color": "purple",
+        "style": "dashed"
+      },
+      {
+        "label": "Monitoring & logging",
+        "color": "yellow",
+        "style": "dotted"
+      }
+    ]
+  }
+}
