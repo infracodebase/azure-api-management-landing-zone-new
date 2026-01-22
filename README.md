@@ -1,4 +1,4 @@
-# Azure API Management Landing Zone Accelerator
+# Azure API Management Landing Zone
 
 This Terraform configuration creates a complete Azure API Management landing zone based on the [Microsoft Cloud Adoption Framework](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/scenarios/app-platform/api-management/landing-zone-accelerator).
 
