@@ -131,7 +131,7 @@ output "developer_portal_url" {
 # Configuration guidance
 output "next_steps" {
   description = "Next steps for configuration"
-  value = <<-EOT
+  value       = <<-EOT
     # API Management Landing Zone Deployment Complete!
 
     ## Access URLs:

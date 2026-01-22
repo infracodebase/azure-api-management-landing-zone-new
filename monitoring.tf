@@ -37,9 +37,8 @@ resource "azurerm_monitor_diagnostic_setting" "apim" {
     category = "WebSocketConnectionLogs"
   }
 
-  metric {
+  enabled_metric {
     category = "AllMetrics"
-    enabled  = true
   }
 }
 
@@ -61,9 +60,8 @@ resource "azurerm_monitor_diagnostic_setting" "appgw" {
     category = "ApplicationGatewayFirewallLog"
   }
 
-  metric {
+  enabled_metric {
     category = "AllMetrics"
-    enabled  = true
   }
 }
 
@@ -81,9 +79,8 @@ resource "azurerm_monitor_diagnostic_setting" "key_vault" {
     category = "AzurePolicyEvaluationDetails"
   }
 
-  metric {
+  enabled_metric {
     category = "AllMetrics"
-    enabled  = true
   }
 }
 
@@ -199,7 +196,7 @@ resource "azurerm_log_analytics_saved_search" "api_errors" {
 
   category     = "API Management"
   display_name = "API Management Error Analysis"
-  query = <<QUERY
+  query        = <<QUERY
 ApiManagementGatewayLogs
 | where TimeGenerated > ago(24h)
 | where ResponseCode >= 400
@@ -214,7 +211,7 @@ resource "azurerm_log_analytics_saved_search" "waf_blocks" {
 
   category     = "Security"
   display_name = "WAF Blocked Requests Analysis"
-  query = <<QUERY
+  query        = <<QUERY
 AzureDiagnostics
 | where ResourceProvider == "MICROSOFT.NETWORK" and Category == "ApplicationGatewayFirewallLog"
 | where action_s == "Blocked"

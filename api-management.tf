@@ -45,56 +45,7 @@ resource "azurerm_api_management" "this" {
   # Security settings
   min_api_version = "2019-12-01"
 
-  # Policy configuration
-  policy {
-    xml_content = <<XML
-<policies>
-  <inbound>
-    <cors allow-credentials="false">
-      <allowed-origins>
-        <origin>*</origin>
-      </allowed-origins>
-      <allowed-methods>
-        <method>GET</method>
-        <method>POST</method>
-        <method>PUT</method>
-        <method>DELETE</method>
-        <method>HEAD</method>
-        <method>OPTIONS</method>
-        <method>PATCH</method>
-      </allowed-methods>
-      <allowed-headers>
-        <header>*</header>
-      </allowed-headers>
-    </cors>
-    <set-header name="X-Forwarded-For" exists-action="override">
-      <value>@(context.Request.IpAddress)</value>
-    </set-header>
-    <set-header name="X-Forwarded-Proto" exists-action="override">
-      <value>https</value>
-    </set-header>
-  </inbound>
-  <backend>
-    <forward-request />
-  </backend>
-  <outbound>
-    <set-header name="X-Powered-By" exists-action="delete" />
-    <set-header name="Server" exists-action="delete" />
-  </outbound>
-  <on-error>
-    <set-header name="ErrorSource" exists-action="override">
-      <value>@(context.LastError.Source)</value>
-    </set-header>
-    <set-header name="ErrorReason" exists-action="override">
-      <value>@(context.LastError.Reason)</value>
-    </set-header>
-    <set-header name="ErrorMessage" exists-action="override">
-      <value>@(context.LastError.Message)</value>
-    </set-header>
-  </on-error>
-</policies>
-XML
-  }
+  # Global policy will be configured post-deployment via separate resource
 
   tags = local.common_tags
 
@@ -160,16 +111,69 @@ resource "azurerm_api_management_custom_domain" "this" {
   gateway {
     host_name                       = "api.contoso.com"
     key_vault_id                    = azurerm_key_vault_certificate.api_ssl.secret_id
-    negotiate_client_certificate   = false
+    negotiate_client_certificate    = false
     ssl_keyvault_identity_client_id = azurerm_user_assigned_identity.apim.client_id
   }
 
   developer_portal {
     host_name                       = "developer.contoso.com"
     key_vault_id                    = azurerm_key_vault_certificate.api_ssl.secret_id
-    negotiate_client_certificate   = false
+    negotiate_client_certificate    = false
     ssl_keyvault_identity_client_id = azurerm_user_assigned_identity.apim.client_id
   }
 
   depends_on = [azurerm_key_vault_certificate.api_ssl]
+}
+
+# Global API Management Policy
+resource "azurerm_api_management_policy" "global" {
+  api_management_id = azurerm_api_management.this.id
+
+  xml_content = <<XML
+<policies>
+  <inbound>
+    <cors allow-credentials="false">
+      <allowed-origins>
+        <origin>*</origin>
+      </allowed-origins>
+      <allowed-methods>
+        <method>GET</method>
+        <method>POST</method>
+        <method>PUT</method>
+        <method>DELETE</method>
+        <method>HEAD</method>
+        <method>OPTIONS</method>
+        <method>PATCH</method>
+      </allowed-methods>
+      <allowed-headers>
+        <header>*</header>
+      </allowed-headers>
+    </cors>
+    <set-header name="X-Forwarded-For" exists-action="override">
+      <value>@(context.Request.IpAddress)</value>
+    </set-header>
+    <set-header name="X-Forwarded-Proto" exists-action="override">
+      <value>https</value>
+    </set-header>
+  </inbound>
+  <backend>
+    <forward-request />
+  </backend>
+  <outbound>
+    <set-header name="X-Powered-By" exists-action="delete" />
+    <set-header name="Server" exists-action="delete" />
+  </outbound>
+  <on-error>
+    <set-header name="ErrorSource" exists-action="override">
+      <value>@(context.LastError.Source)</value>
+    </set-header>
+    <set-header name="ErrorReason" exists-action="override">
+      <value>@(context.LastError.Reason)</value>
+    </set-header>
+    <set-header name="ErrorMessage" exists-action="override">
+      <value>@(context.LastError.Message)</value>
+    </set-header>
+  </on-error>
+</policies>
+XML
 }

@@ -1,3 +1,6 @@
+# Data source to get current client configuration
+data "azurerm_client_config" "backend" {}
+
 # App Service Plan for backend services
 resource "azurerm_service_plan" "backend" {
   name                = "asp-backend-${local.resource_suffix}"
@@ -85,17 +88,16 @@ resource "azurerm_kubernetes_cluster" "backend" {
   kubernetes_version  = "1.28"
 
   default_node_pool {
-    name                = "system"
-    node_count          = 2
-    vm_size             = "Standard_D2s_v3"
-    type                = "VirtualMachineScaleSets"
+    name                 = "system"
+    node_count           = 2
+    vm_size              = "Standard_D2s_v3"
+    type                 = "VirtualMachineScaleSets"
     auto_scaling_enabled = true
-    min_count           = 1
-    max_count           = 3
-    vnet_subnet_id      = azurerm_subnet.backend.id
+    min_count            = 1
+    max_count            = 3
+    vnet_subnet_id       = azurerm_subnet.backend.id
 
     # Enable Azure CNI for network integration
-    enable_node_public_ip = false
 
     upgrade_settings {
       max_surge = "10%"
@@ -109,11 +111,10 @@ resource "azurerm_kubernetes_cluster" "backend" {
 
   # Network profile for Azure CNI
   network_profile {
-    network_plugin     = "azure"
-    network_policy     = "azure"
-    service_cidr       = "172.16.0.0/16"
-    dns_service_ip     = "172.16.0.10"
-    docker_bridge_cidr = "172.17.0.1/16"
+    network_plugin = "azure"
+    network_policy = "azure"
+    service_cidr   = "172.16.0.0/16"
+    dns_service_ip = "172.16.0.10"
   }
 
   # Private cluster configuration
@@ -122,7 +123,7 @@ resource "azurerm_kubernetes_cluster" "backend" {
 
   # Azure AD integration
   azure_active_directory_role_based_access_control {
-    managed            = true
+    tenant_id          = data.azurerm_client_config.backend.tenant_id
     azure_rbac_enabled = true
   }
 
@@ -143,7 +144,7 @@ resource "azurerm_api_management_backend" "app_service" {
   url                 = "https://${azurerm_linux_web_app.backend_api.default_hostname}"
 
   service_fabric_cluster {
-    management_endpoints = ["https://${azurerm_linux_web_app.backend_api.default_hostname}"]
+    management_endpoints             = ["https://${azurerm_linux_web_app.backend_api.default_hostname}"]
     max_partition_resolution_retries = 5
   }
 
