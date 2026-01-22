@@ -15,7 +15,14 @@
       "icon": "/icons/azure/networking/virtual-network.png",
       "type": "container",
       "parentNode": "vnet",
-      "layout": "column"
+      "layout": "column",
+      "decorators": [
+        {
+          "icon": "/icons/azure/networking/network-security-group.png",
+          "position": "bottom-right",
+          "tooltip": "NSG: nsg-appgw"
+        }
+      ]
     },
     {
       "id": "apim-subnet",
@@ -24,7 +31,14 @@
       "icon": "/icons/azure/networking/virtual-network.png",
       "type": "container",
       "parentNode": "vnet",
-      "layout": "column"
+      "layout": "column",
+      "decorators": [
+        {
+          "icon": "/icons/azure/networking/network-security-group.png",
+          "position": "bottom-right",
+          "tooltip": "NSG: nsg-apim"
+        }
+      ]
     },
     {
       "id": "backend-subnet",
@@ -33,12 +47,19 @@
       "icon": "/icons/azure/networking/virtual-network.png",
       "type": "container",
       "parentNode": "vnet",
-      "layout": "column"
+      "layout": "column",
+      "decorators": [
+        {
+          "icon": "/icons/azure/networking/network-security-group.png",
+          "position": "bottom-right",
+          "tooltip": "NSG: nsg-backend"
+        }
+      ]
     },
     {
       "id": "internet",
       "label": "Internet",
-      "icon": "/icons/azure/networking/virtual-network.png",
+      "icon": "/icons/onprem/network/internet.png",
       "position": {
         "relativeTo": "vnet",
         "side": "above"
@@ -76,7 +97,7 @@
       "id": "aks",
       "label": "Kubernetes Service",
       "subtitle": "aks-backend",
-      "icon": "/icons/azure/compute/kubernetes-service-and-ingres.png",
+      "icon": "/icons/azure/compute/aks.png",
       "parentNode": "backend-subnet"
     },
     {
@@ -111,36 +132,6 @@
       "position": {
         "relativeTo": "log-analytics",
         "side": "below"
-      }
-    },
-    {
-      "id": "appgw-nsg",
-      "label": "Network Security Group",
-      "subtitle": "nsg-appgw",
-      "icon": "/icons/azure/networking/network-security-group.png",
-      "position": {
-        "relativeTo": "appgw-subnet",
-        "side": "left"
-      }
-    },
-    {
-      "id": "apim-nsg",
-      "label": "Network Security Group",
-      "subtitle": "nsg-apim",
-      "icon": "/icons/azure/networking/network-security-group.png",
-      "position": {
-        "relativeTo": "apim-subnet",
-        "side": "left"
-      }
-    },
-    {
-      "id": "backend-nsg",
-      "label": "Network Security Group",
-      "subtitle": "nsg-backend",
-      "icon": "/icons/azure/networking/network-security-group.png",
-      "position": {
-        "relativeTo": "backend-subnet",
-        "side": "left"
       }
     }
   ],
@@ -212,24 +203,6 @@
       "label": "telemetry",
       "color": "yellow",
       "style": "dotted"
-    },
-    {
-      "id": "nsg-appgw",
-      "source": "appgw-nsg",
-      "target": "appgw-subnet",
-      "label": "protects"
-    },
-    {
-      "id": "nsg-apim",
-      "source": "apim-nsg",
-      "target": "apim-subnet",
-      "label": "protects"
-    },
-    {
-      "id": "nsg-backend",
-      "source": "backend-nsg",
-      "target": "backend-subnet",
-      "label": "protects"
     }
   ],
   "name": "Azure API Management Landing Zone Accelerator",
