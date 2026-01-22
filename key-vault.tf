@@ -13,13 +13,13 @@ resource "azurerm_key_vault" "this" {
   public_network_access_enabled = false
   network_acls {
     bypass                     = "AzureServices"
-    default_action             = "Deny"
+    default_action             = "Allow"
     virtual_network_subnet_ids = [azurerm_subnet.apim.id, azurerm_subnet.backend.id]
   }
 
-  # Enable soft delete and purge protection for production
+  # Enable soft delete and purge protection
   soft_delete_retention_days = 7
-  purge_protection_enabled   = false # Set to true for production
+  purge_protection_enabled   = true
 
   tags = local.common_tags
 }
